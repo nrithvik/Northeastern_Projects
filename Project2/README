@@ -1,0 +1,62 @@
+                                      						Project - 2
+			                                                	       WEB-CRAWLER
+
+
+Approach:
+
+-> The program runs by obtaining the Username and password from the user
+
+-> The IP address of the server is resolved from the hostname by the 
+   gethostbyname() function.
+
+-> A GET message is sent to the server with host and other details
+
+-> Server responds with 200-OK message with “csrftoken” and “Session-ID”
+
+-> Client gets the “csrftoken”,”Session-ID” from the GET message and “Username” and “Password” from the command line and sends these information in a POST message.
+
+-> Server responds with 302-FOUND message along with the URL to which further requests are to be sent. 
+
+-> Client sends a GET message to the new location with “csrftoken” and “Session-ID”.
+
+-> Server responds with 200-OK and sends the requested page. The retrieved page is parsed to find links and they are stored in a list(“mainlist”). The no of links found in a page are stored in a separate list(Sublist_legth)
+
+-> A sublist is created which accepts part of the mainlist(equal to the number of links denoted by each value of Sublist_length). It is traversed to find further links in the subsequent pages and they are stored in the “mainlist”.
+
+->Each entry in the mainlist is allowed only after checking if the entry starts with ‘/fakebook/’ and if it is not already present in the list.
+
+-> Each page is parsed to check if there is any flag present. If yes, the flag is retrieved and stored in a separate list named “secret_flags”.
+-> Each response from the server is checked and errors are handled as below
+
+If the response is “301 MOVED PERMANENTLY”, the new location is retrieved and the request is redirected.   
+If the response is “403 FORBIDDEN”, an error is thrown to the user and connection is terminated.
+If the response is “404 NOT FOUND”, an error is thrown to the user and connection is terminated.
+If the response is “500 INTERNAL SERVER ERROR”, socket is re-established and the request is sent again.
+ 
+Challenges Faced:
+
+-> Had issues understanding the flow of messages between the client and the server.  ran the browser version of “Fakebook” and analyzed the conversation through Wireshark. 
+
+-> Initially not sure about the parameters to be declared inside GET and POST messages.
+
+-> The response from the server was split between different packets, so kept listening to the response until the entire message body was received. 
+
+-> The program ended abruptly without any indication.  opened and closed the socket for each request by the client and response from the server.
+
+-> Unable to traverse the “mainlist” while appending values to it.  created a “sublist” which takes in part of the “mainlist” and traverses through the links.
+
+-> The Session-ID of the OK message and FOUND message were different.  had to catch the Session ID each time and ensure that the next request has the last received Session ID.
+
+
+Testing the code:
+
+Entered the Username and password in the command-line and checked for Secret-flags inside all links that are being traversed. 
+
+-> Checked and verified if the credentials entered are authentic.
+
+-> Checked for any unexpected responses from the Server and caught those exceptions. 
+
+-> Checked if the flag received contains a 64 byte flag. 
+
+-> Checked and ensured that the socket is not being kept open for long time.
+

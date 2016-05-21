@@ -1,0 +1,54 @@
+Before running the file, please ensure ethtool is installed, the iptables are flushed, and are setup correctly.
+
+sudo ethtool --offload eth0 rx off tx off
+sudo ethtool -K eth0 gso off
+sudo ethtool -K eth0 gro off
+
+this will turn off checksum offloading in the network driver.
+
+Approach:
+
+-> The program runs by obtaining the url argument from the command line and parses it to obtain the path and destination name
+
+-> The IP address of the server is resolved from the hostname by the
+   gethostbyname() function.
+
+-> Our client then constructs the TCP header, IP header along with the data, if there is any to be sent, and calculates the checksum.
+
+
+-> Since we are using Raw Packets, we use SOCK_RAW/IPPROTO_RAW to send the pakcets, and SOCK_RAW/IPPROTO_TCP to recieve the packets.
+
+-> The client then initiates the handshake connection by sending a SYN packet to the server, waits to receive a SYN-ACK packet from the server, and after obtainin
+   the SYN-ACK, the client sends an ACK to the server.
+
+-> After this the client then sends a GET message to download the URL mentioned in the Command Line Argument. This packet has the PSH and ACK bit set.
+
+-> The client starts to recieve the packets from the server, each packet's sequence number is compared to find out if packet received is the packet that is expected.
+
+-> If the packet received is the expected packet, an ACK is sent to the server. If this is not the case, then the recieved packet is dropped, and the client waits for a minute
+   before forcing the server for a retransmission. 
+
+-> Once the the client receives all the packets, it writes them to file having the same name as the path. If the URL ends with a '/' or there is no path name then the 
+   packets are written to index.html
+
+-> If a packet is not received in 3 minutes then the program exits. If a message other than 200 OK is returned by the server, the program prints the message and exits.
+
+
+TCP/IP Features implemented:
+
+->Checksum
+->Reliability
+->Gracefull connection shutdown in case of FIN ACK
+->Packets recieved are in order
+->Lost packets are retrieved
+->Timeout for lost packets
+
+Challenges faced:
+
+-> Had difficulty in creating checksum
+
+-> Could not perform cumulative ack in TCP
+
+-> Multiple retransimmsions from the server for a single packet
+
+-> Duplicate acknowledgments sent from client for a lost packet 

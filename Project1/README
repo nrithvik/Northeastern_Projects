@@ -1,0 +1,66 @@
+                                Project - 1
+				SIMPLE CLIENT
+
+
+
+Approach:
+
+-> The program runs by obtaining the PortNumber, ServerName, and NUID of the 
+   student from the user.
+
+-> The IP address of the server is resolved from the hostname by the 
+   gethostbyname() function.
+
+-> A HELLO message is sent to the server after establishing a connection.
+   The HELLO message contains the NUID.
+
+-> The server responds with a status message and contains two operands and one
+   operator. The operands are integers within the range of 1-1000, and 
+   operators used are '+', '-', '*', and '/'.
+
+-> The client calculates the solution for using the operands and the operators
+   and sends it back to the server.
+
+-> The above process is placed in a loop till the server sends a BYE message.
+
+-> Upon receiving the BYE message the client prints the secret flag contained
+   within said message, and closes the socket.
+
+ 
+Challenges Faced:
+
+-> Had issues with executing the client program through Bash script and 
+   passing arguments through command line to ensure that it is compliant to 
+   the format specified in project statement
+
+-> Implementing secure socket 
+
+-> Had to make the program robust against errors and unwanted responses that can 
+   be received from client and server side and close the socket if any such thing
+   is received.
+
+
+Testing the code:
+
+Tested the code based on any human error from the user, any unexpected
+response from the server, and different combinations each. For all these errors the client terminates the
+connection and closes the program.
+
+-> Checked and verified if the ServerName, PortNumber, and NUID provided by the user are
+   valid and in the order as defined in the project statement.
+
+-> Checked for any unexpected responses from the Server including the operands
+   and operators. 
+
+-> Checked for errors caused by valid operands and operators, specifically
+   DivisionByZero.
+
+-> Checked if the final message received contains a 64 byte flag. 
+
+-> Checked and ensured that the socket is not being kept open for long time.
+
+-> Cheked to see if a user has given a port number within 0-65535.
+
+-> If the user gives a port number which is within the range of 0-65535 but not 27994,
+   the socket tries to connect to the server port and times out since the server does not 
+   have an open socket on that port, thus generating a socket time out error.

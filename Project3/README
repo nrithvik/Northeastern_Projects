@@ -1,0 +1,96 @@
+										PROJECT -3
+										 README
+
+
+
+
+
+Methodology Overview
+We are going to use NS-2 and create a local installation of NS-2 on Fedora. This is because N2-2 is a discrete network simulator support through DARPA and NSF, so the results of simulation by using NS-2 are trustworthy. Also, we may conduct the experiments for another TCP variant (i.e. BIC, CUBIC, Hybla, Compound) as well as Tahoe, Reno, NewReno, and Vegasfor extra credits. That is why we use a local installation of NS-2. Moreover, we are going to modify "ns-simple-tcl", which is in one of the example links
+provided by the professor, to set up the network topology given in the project description.
+
+
+Experiment 1
+We will start the CBR flow at a very low rate because very small bandwidth can be a bottleneck for some of the TCP variants. We assume that increasing the bandwidth will probably increase the throughput and packet drop rate but decrease the latency. Thus, we will keep increasing the CBR rate and see how the throughput, packet drop rate, and latency will change and when there will be a big change of them. We will continue to change the CBR rate until the throughput starts decreasing, which we assume is the bottleneck capacity.
+In order to introduce randomness in the network, we can have different combinations of TCP, and CBR connection order.We can:
+
+1. Start CBR and TCP at the same time.
+2. Start CBR first and then TCP after interval 1.
+3. Start TCP first and then CBR after interval 1.
+4. End CBR first and then TCP after interval 2.
+5. End TCP first and then CBR after interval 2.
+
+
+Experiment 2 
+We will start two TCP streams at the same time with very low bandwidth, where the competition to get bandwidth is extreme. Then, we will raise the bandwidth in order to see how the difference of the bandwidths affect the average throughput, packet loss rate, and latency of each TCP flow. As in experiment 1, we will keep changing the bandwidth until it reaches the bottleneck capacity. After finishing this cycle, we will conduct the same experiment with different combinations of the TCP variants to see whether any particular TCP variant gets more bandwidth. Then, we will perform the same experiment again with different connection orders to see whether the order of connection of each TCP stream can affect the fairness. Lastly, we will run the same experiment combining all of the configurations above. 
+
+In order to introduce randomness in the network, we can have different combinations of TCP1, and TCP2 connection order. We can:
+
+1. Start TCP2 and TCP1 at the same time.
+2. Start TCP2 first and then TCP1 after interval 1.
+3. Start TCP1 first and then TCP2 after interval 1.
+4. End TCP2 first and then TCP1 after interval 2.
+5. End TCP1 first and then TCP2 after interval 2.
+
+We can also change the MSS, Window, and the Window scale factor in the Options found in the TCP header packet to see how it affects the throughput, latency, and packet loss rate.
+
+
+Experiment 3
+As the guideline says, we will conduct an experiment where a TCP flow starts first, and a CBR/UDP flow stats when the TCP flow becomes steady. We will perform the experiment
+with two different queuing disciplines, Drop Tail and Random Early Drop (RED). Then, we will analyze how the queuing disciplines
+can affect the fairness of the bandwidth of each flow and each flow's latency. Also, we will observe how the TCP flow react when the CBR/UDP flow starts. To answer whether
+SACK works well with RED,we will perform the experiments above oncewith TCP Reno and once with SACK.
+
+Parameters we can change in order to introduce randomness in the network:
+
+1. Buffer size varies by an interval of 100 bytes
+2. Maximum queue length threshold for RED varies by an interval of 100 bytes
+3. Minimum queue length threshold for RED varies by an interval of 100 bytes
+
+In order to find out which TCP variant is the best of the given 4, we can perform statistical analysis and find out the mean of the data sets and provide them to the T-test. We can also find the variance. The T-test would provide a real difference in the averages of the variants, whilst the variance would help us determine which
+TCP variant is the better one in the group.
+
+
+Problems Faced:
+
+1. Understanding the TCP congestion avoidance algorithms.
+2. Parsing data using the awk scripts.
+3. Generating graphs using both excel and xgraph.
+
+
+Instructions to execute:
+
+Exp 1:
+
+./project3_experiment1.sh TCP1_START TCP1_END CBR_START CBR_END
+
+TCP1_START= start time of TCP1 
+TCP1_END= End time of TCP1
+CBR_START= Start time of CBR
+CBR_END= End time of CBR
+
+
+Exp2:
+
+./project3_experiment2.sh TCP1_START TCP1_END TCP2_START TCP2_END CBR_START CBR_END
+
+
+TCP1_START= start time of TCP1
+TCP1_END= End time of TCP1
+TCP2_START = start time of TCP2
+TCP2_END= end tie of TCP2
+CBR_START= Start time of CBR
+CBR_END= End time of CBR
+
+Exp3:
+
+./project3_experiment3.sh TCP1_START TCP1_END CBR_START CBR_END
+
+TCP1_START= start time of TCP1
+TCP1_END= End time of TCP1
+CBR_START= Start time of CBR
+CBR_END= End time of CBR
+
+
+We are using awk script to parse the trace files. The graphs are plotted using excel.
+All ns simulations can be executed for a duration of 20 seconds.
